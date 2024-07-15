@@ -2,7 +2,7 @@ create database executivebank;
 use executivebank;
 
 CREATE TABLE Users (
-    id INT  PRIMARY KEY,
+    id INT auto_increment PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
@@ -12,7 +12,7 @@ CREATE TABLE Users (
 );
 
 CREATE TABLE Accounts (
-    id INT  PRIMARY KEY,
+    act_id INT auto_increment PRIMARY KEY,
     user_id INT,
     account_number VARCHAR(20) UNIQUE,
     balance DECIMAL(10, 2) DEFAULT 0.00,
