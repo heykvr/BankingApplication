@@ -23,12 +23,14 @@ CREATE TABLE Accounts (
 );
 
 CREATE TABLE Transactions (
-    id INT  PRIMARY KEY,
-    account_id INT,
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    from_account_id INT NULL,
+    to_account_id INT NULL,
     type ENUM('deposit', 'withdrawal', 'transfer'),
     amount DECIMAL(10, 2),
     balance_after DECIMAL(10, 2),
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (account_id) REFERENCES Accounts(id)
+    FOREIGN KEY (from_account_id) REFERENCES Accounts(act_id),
+    FOREIGN KEY (to_account_id) REFERENCES Accounts(act_id)
 );
 
