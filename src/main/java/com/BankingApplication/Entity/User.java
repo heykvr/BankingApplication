@@ -1,0 +1,56 @@
+package com.BankingApplication.Entity;
+
+
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.time.LocalDateTime;
+import java.util.Set;
+
+@Entity
+@Table(name = "Users")
+
+@Data
+public class User {
+
+    @Id
+    private  Integer id;
+
+    @Column(unique = true, nullable = false, length = 50)
+    private String username;
+
+    @Column(unique = true, nullable = false, length = 100)
+    private String email;
+
+    @Column(nullable = false, length = 255)
+    private String password;
+
+    @OneToMany(mappedBy = "user_id",fetch = FetchType.EAGER)
+    private Set<Account> accounts;
+
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "ENUM('customer', 'bank_teller','admin') DEFAULT 'customer'")
+    private Role role = Role.CUSTOMER;
+
+    @Column(name = "created_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", updatable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
+    private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = this.updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public enum Role {
+        CUSTOMER,
+        BANK_TELLER,
+        ADMIN
+    }
+}

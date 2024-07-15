@@ -1,4 +1,5 @@
 create database executivebank;
+use executivebank;
 
 CREATE TABLE Users (
     id INT  PRIMARY KEY,
