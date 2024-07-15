@@ -21,6 +21,7 @@ public class AccountManagement {
     @PostMapping("/add_account")
     public Account saveAccount(@RequestBody Account ac)
     {
+        System.out.println(ac);
         AcRepo.save(ac);
         return ac;
     }

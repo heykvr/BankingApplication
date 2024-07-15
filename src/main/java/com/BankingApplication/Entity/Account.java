@@ -4,6 +4,7 @@ package com.BankingApplication.Entity;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -17,13 +18,10 @@ public class Account {
     @Id
     private Integer act_id;
 
-
-    @ManyToOne
-    @JoinColumn(name = "id", nullable = false)
-    private User user_id;
+    private Integer user_id;
 
     @Column(unique = true, length = 20)
-    private String accountNumber;
+    private String account_number;
 
     @Column(precision = 10, scale = 2, columnDefinition = "DECIMAL(10,2) DEFAULT 0.00")
     private BigDecimal balance = BigDecimal.ZERO;

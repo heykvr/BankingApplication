@@ -1,6 +1,8 @@
 package com.BankingApplication.Entity;
 
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -9,12 +11,11 @@ import java.util.Set;
 
 @Entity
 @Table(name = "Users")
-
 @Data
 public class User {
 
     @Id
-    private  Integer id;
+    private Integer id;
 
     @Column(unique = true, nullable = false, length = 50)
     private String username;
@@ -25,8 +26,6 @@ public class User {
     @Column(nullable = false, length = 255)
     private String password;
 
-    @OneToMany(mappedBy = "user_id",fetch = FetchType.EAGER)
-    private Set<Account> accounts;
 
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "ENUM('customer', 'bank_teller','admin') DEFAULT 'customer'")
@@ -53,4 +52,5 @@ public class User {
         BANK_TELLER,
         ADMIN
     }
+
 }
