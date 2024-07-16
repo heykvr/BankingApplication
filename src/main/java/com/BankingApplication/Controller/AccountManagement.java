@@ -4,37 +4,37 @@ import com.BankingApplication.Entity.Account;
 import com.BankingApplication.Entity.User;
 import com.BankingApplication.Repository.AccountRepository;
 import com.BankingApplication.Repository.UserRepository;
+import com.BankingApplication.Service.AccountManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 public class AccountManagement {
     @Autowired
-    AccountRepository AcRepo;
-
-    @Autowired
-    UserRepository UsRepo;
+    AccountManagementService ams;
 
     @PostMapping("/add_account")
-    public Account saveAccount(@RequestBody Account ac)
+    public Account createAccount(@RequestBody Account ac)
     {
-        System.out.println(ac);
-        AcRepo.save(ac);
-        return ac;
+        return ams.saveAccount(ac);
     }
 
-    @PostMapping("/add_user")
-    public User saveUser(@RequestBody User us)
+    @GetMapping("/get_account_details")
+    public List<Account> getAccountDetails()
     {
-        UsRepo.save(us);
-        return us;
+        return ams.getAccountDetails();
     }
+    @GetMapping("/get_account_details_by_Id/{id}")
+    public Account getAccountDetailsById(@PathVariable int id)
+    {
+        return ams.getAccountDetailsById(id);
+    }
+
 
 
 }

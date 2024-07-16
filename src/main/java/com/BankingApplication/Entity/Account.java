@@ -1,6 +1,7 @@
 package com.BankingApplication.Entity;
 
 
+import com.BankingApplication.Constants.AccountTypes;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,8 +30,8 @@ public class Account {
     private BigDecimal balance = BigDecimal.ZERO;
 
     @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "ENUM('active', 'inactive') DEFAULT 'active'")
-    private Status status = Status.ACTIVE;
+    @Column(columnDefinition = "ENUM('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE'")
+    private AccountTypes status = AccountTypes.ACTIVE;
 
     @Column(name = "created_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", updatable = false)
     private LocalDateTime createdAt;
@@ -48,8 +49,5 @@ public class Account {
         this.updatedAt = LocalDateTime.now();
     }
 
-    public enum Status {
-        ACTIVE,
-        INACTIVE
-    }
+
 }

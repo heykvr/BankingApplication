@@ -1,6 +1,7 @@
 package com.BankingApplication.Entity;
 
 
+import com.BankingApplication.Constants.UserTypes;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
@@ -30,7 +31,7 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "ENUM('customer', 'bank_teller','admin') DEFAULT 'customer'")
-    private Role role = Role.CUSTOMER;
+    private UserTypes role =UserTypes.CUSTOMER;
 
     @Column(name = "created_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", updatable = false)
     private LocalDateTime createdAt;
@@ -48,10 +49,6 @@ public class User {
         this.updatedAt = LocalDateTime.now();
     }
 
-    public enum Role {
-        CUSTOMER,
-        BANK_TELLER,
-        ADMIN
-    }
+
 
 }
