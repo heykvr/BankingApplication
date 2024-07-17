@@ -11,7 +11,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @AllArgsConstructor
 public class TransactionService implements TransactionServiceInterface {
@@ -32,7 +35,6 @@ public class TransactionService implements TransactionServiceInterface {
         BigDecimal updatedBalance = accountDetails.getBalance().add(transactionDto.getAmount());
         accountDetails.setBalance(updatedBalance);
         accountRepository.save(accountDetails);
-        depositTransaction.setBalance_after(updatedBalance);
         Transaction savedTransaction = transactionRepository.save(depositTransaction);
         return TransactionMapper.mapToTransactionDto(savedTransaction);
     }
@@ -48,7 +50,7 @@ public class TransactionService implements TransactionServiceInterface {
                 .orElseThrow(()-> new EntityNotFoundException("Account not found with Id: "+accountId));
         BigDecimal currentBalance = getAccountDetails.getBalance();
         BigDecimal requiredAmountToWithDraw = transactionDto.getAmount();
-        if(currentBalance.compareTo(requiredAmountToWithDraw)<0){
+        if(currentBalance.compareTo(requiredAmountToWithDraw)<=0){
             try {
                 throw new Exception("Insufficient funds for withdrawal");
             } catch (Exception e) {
@@ -58,27 +60,59 @@ public class TransactionService implements TransactionServiceInterface {
         BigDecimal updatedBalance = currentBalance.subtract(requiredAmountToWithDraw);
         getAccountDetails.setBalance(updatedBalance);
         accountRepository.save(getAccountDetails);
-        withDrawTransaction.setBalance_after(updatedBalance);
         Transaction savedTransaction = transactionRepository.save(withDrawTransaction);
         return TransactionMapper.mapToTransactionDto(savedTransaction);
     }
 
+    @Transactional
     @Override
     public TransactionDto transferAmoount(TransactionDto transactionDto) {
 
-        return null;
+        if(transactionDto == null || transactionDto.getAmount() == null || transactionDto.getAmount().compareTo(BigDecimal.ZERO)<=0){
+            throw new IllegalArgumentException("invalid transaction data");
+        }
+
+        Transaction transferTransaction = TransactionMapper.mapToTransaction(transactionDto);
+        int fromAccountId = transferTransaction.getFrom_account_id();
+        int toAccountId = transferTransaction.getTo_account_id();
+        Account fromAccount = accountRepository.findById(fromAccountId).orElseThrow(()->new EntityNotFoundException("Account not found with Id:" +fromAccountId));
+        BigDecimal fromAccountBalance=  fromAccount.getBalance();
+        Account toAccount = accountRepository.findById(toAccountId).orElseThrow(()->new EntityNotFoundException("Account not found with Id:" +toAccountId));
+        BigDecimal toAccountBalance=  toAccount.getBalance();
+
+        BigDecimal transferringAmount = transactionDto.getAmount();
+
+       if(fromAccountBalance.compareTo(transferringAmount)<=0){
+           try {
+               throw new Exception("Insufficient funds for transfer in acoount: "+fromAccountId);
+           } catch (Exception e) {
+               throw new RuntimeException(e);
+           }
+       }
+
+        BigDecimal updateBalanceInFromAccount = fromAccountBalance.subtract(transferringAmount);
+        fromAccount.setBalance(updateBalanceInFromAccount);
+        accountRepository.save(fromAccount);
+
+        BigDecimal updateBalanceInToAccount = toAccountBalance.add(transferringAmount);
+        toAccount.setBalance(updateBalanceInToAccount);
+        accountRepository.save(toAccount);
+        Transaction savedTransaction = transactionRepository.save(transferTransaction);
+
+        return TransactionMapper.mapToTransactionDto(savedTransaction);
     }
 
     @Override
     public List<TransactionDto> getAllTransactionOfAccount(int accountId) {
-        return List.of();
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new EntityNotFoundException("Account not found with Id: " + accountId));
+        List<Transaction> transactions = transactionRepository.findByFromAccountIdOrToAccountId(accountId);
+        return transactions.stream()
+                .map(TransactionMapper::mapToTransactionDto)
+                .collect(Collectors.toList());
     }
 
-    // deposit method(1 acc id,amount)
 
-
-
-    //withdrawal method(1 acc id ,amount)
 
 
 }

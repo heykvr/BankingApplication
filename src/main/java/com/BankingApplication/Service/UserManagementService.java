@@ -20,27 +20,23 @@ public class UserManagementService {
         try{
             User a= UserMapper.mapToUser(us);
             User b=UsRepo.save(a);
-            return new ResponseEntity(HttpStatus.CREATED);
+            return new ResponseEntity<>(HttpStatus.CREATED);
         }
         catch (Exception e)
         {
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
     public ResponseEntity<User> getUserById(int id) {
         Optional<User> lst=UsRepo.findById(id);
-        if(!lst.isEmpty())
-        {
-            return new ResponseEntity<>(lst.get(),HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return lst.map(user -> new ResponseEntity<>(user, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.BAD_REQUEST));
 
     }
 
     public ResponseEntity<User> updateByUserId(int id,User us) {
         Optional<User> lst=UsRepo.findById(id);
-        if(!lst.isEmpty())
+        if(lst.isPresent())
         {
             User u=lst.get();
             u.setEmail(us.getEmail());
