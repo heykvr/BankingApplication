@@ -1,5 +1,6 @@
 package com.BankingApplication.Controller;
 
+import com.BankingApplication.Dto.UserDto;
 import com.BankingApplication.Entity.User;
 import com.BankingApplication.Service.UserManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,7 @@ public class Usermanagement {
     UserManagementService ums;
 
     @PostMapping("/add_user")
-    public ResponseEntity<User> createUser(@RequestBody User us)
+    public ResponseEntity<UserDto> createUser(@RequestBody UserDto us)
     {
         return ums.saveUser(us) ;
     }

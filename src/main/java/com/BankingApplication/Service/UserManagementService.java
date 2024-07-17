@@ -1,6 +1,8 @@
 package com.BankingApplication.Service;
 
+import com.BankingApplication.Dto.UserDto;
 import com.BankingApplication.Entity.User;
+import com.BankingApplication.Mapper.UserMapper;
 import com.BankingApplication.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,9 +16,10 @@ import java.util.Optional;
 public class UserManagementService {
     @Autowired
     UserRepository UsRepo;
-    public ResponseEntity<User> saveUser(User us) {
+    public ResponseEntity<UserDto> saveUser(UserDto us) {
         try{
-            User a=UsRepo.save(us);
+            User a= UserMapper.mapToUser(us);
+            User b=UsRepo.save(a);
             return new ResponseEntity(HttpStatus.CREATED);
         }
         catch (Exception e)
