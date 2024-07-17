@@ -3,6 +3,7 @@ package com.BankingApplication.Entity;
 
 import com.BankingApplication.Constants.AccountTypes;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.boot.registry.selector.spi.StrategyCreator;
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "Accounts")
 public class Account {

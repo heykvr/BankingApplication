@@ -3,9 +3,8 @@ package com.BankingApplication.Controller;
 import com.BankingApplication.Entity.User;
 import com.BankingApplication.Service.UserManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class Usermanagement {
@@ -14,9 +13,20 @@ public class Usermanagement {
     UserManagementService ums;
 
     @PostMapping("/add_user")
-    public User createUser(@RequestBody User us)
+    public ResponseEntity<User> createUser(@RequestBody User us)
     {
-
         return ums.saveUser(us) ;
+    }
+
+    @GetMapping("/get_user_by_Id/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable int id)
+    {
+        return ums.getUserById(id);
+    }
+
+    @PutMapping("/update_user_by_Id/{id}")
+    public ResponseEntity<User> updateUserById(@PathVariable int id,@RequestBody User us)
+    {
+        return ums.updateByUserId(id,us);
     }
 }
