@@ -34,6 +34,7 @@ public class TransactionService implements TransactionServiceInterface {
                 .orElseThrow(() -> new EntityNotFoundException("Account not found with ID: " + accountId));
         BigDecimal updatedBalance = accountDetails.getBalance().add(transactionDto.getAmount());
         accountDetails.setBalance(updatedBalance);
+        depositTransaction.setBalance_after(updatedBalance);
         accountRepository.save(accountDetails);
         Transaction savedTransaction = transactionRepository.save(depositTransaction);
         return TransactionMapper.mapToTransactionDto(savedTransaction);

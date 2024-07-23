@@ -29,6 +29,7 @@ public class AccountManagement {
     @GetMapping("/get_account_details")
     public ResponseEntity<List<Account>> getAccountDetails()
     {
+
         return ams.getAccountDetails();
     }
     @GetMapping("/get_account_details_by_Id/{id}")
