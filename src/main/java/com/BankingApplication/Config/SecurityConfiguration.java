@@ -31,12 +31,12 @@ public class SecurityConfiguration {
                     requests.requestMatchers("/get_user_by_Id/{id}","/get_account_details").authenticated()
                             .requestMatchers("/get_account_details_by_Id/{id}").permitAll()
                             .anyRequest().permitAll();
-                });
-//                .sessionManagement(session -> session
-//                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Use stateless sessions
-//                )
+                })
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Use stateless sessions
+                )
 //                .addFilterAfter(new JwtGenerationFilter(), BasicAuthenticationFilter.class)
-//                .addFilterBefore(new JwtValidationFilter(), BasicAuthenticationFilter.class);
+                .addFilterBefore(new JwtValidationFilter(), BasicAuthenticationFilter.class);
 
 
 //        http.formLogin(Customizer.withDefaults());

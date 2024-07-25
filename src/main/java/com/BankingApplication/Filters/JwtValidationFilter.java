@@ -25,7 +25,7 @@ public class JwtValidationFilter extends OncePerRequestFilter {
         if (null != jwt) {
             try {
 
-                String secret = "jew9uheiojgepjnoi9";
+                String secret = "9mM+eG7dQxPElbz0j7vH7I4e5n+m8QZg8vwXH0S5lY0=";
                 SecretKey secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
                 if (null != secretKey) {
                     Claims claims = Jwts.parser().verifyWith(secretKey)
@@ -45,6 +45,6 @@ public class JwtValidationFilter extends OncePerRequestFilter {
     }
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        return request.getServletPath().equals("/user/login");
+        return request.getServletPath().equals("/login");
     }
 }
