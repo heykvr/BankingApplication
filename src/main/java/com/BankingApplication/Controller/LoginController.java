@@ -2,6 +2,7 @@ package com.BankingApplication.Controller;
 
 
 import com.BankingApplication.Dto.LoginRequest;
+import com.BankingApplication.Exception.CustomExceptions;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,34 +31,10 @@ public class LoginController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
-//        try {
-//            System.out.println("before auth obj");
-//            Authentication authentication = authenticationManager.authenticate(
-//                    new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
-//            );
-//
-//            SecurityContextHolder.getContext().setAuthentication(authentication);
-//
-//
-//            Authentication newAuthentication = SecurityContextHolder.getContext().getAuthentication();
-//            if (null != newAuthentication) {
-//
-//
-//                String secret = "jew9uheiojgepjnoi9";
-//                SecretKey secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
-//                String jwt = Jwts.builder().issuer("Executive Bank").subject("JWT Token")
-//                        .claim("username", newAuthentication.getName())
-//                        .claim("authorities", newAuthentication.getAuthorities().stream().map(
-//                                GrantedAuthority::getAuthority).collect(Collectors.joining(",")))
-//                        .issuedAt(new Date())
-//                        .expiration(new Date((new Date()).getTime() + 30000000))
-//                        .signWith(secretKey).compact();
-//                response.setHeader("Authorization", jwt);
-//
-//            return ResponseEntity.ok("Login successful");
-//        } catch (AuthenticationException e) {
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
-//        }
+
+        if (loginRequest == null || loginRequest.getUsername() == null || loginRequest.getPassword() == null) {
+            throw new CustomExceptions.BadRequestException("Invalid login request");
+        }
 
         String jwt = "";
         Authentication authentication = UsernamePasswordAuthenticationToken.unauthenticated(loginRequest.getUsername(),

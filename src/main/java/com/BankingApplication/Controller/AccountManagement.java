@@ -3,6 +3,7 @@ package com.BankingApplication.Controller;
 import com.BankingApplication.Dto.AccountDto;
 import com.BankingApplication.Entity.Account;
 import com.BankingApplication.Entity.User;
+import com.BankingApplication.Exception.CustomExceptions;
 import com.BankingApplication.Repository.AccountRepository;
 import com.BankingApplication.Repository.UserRepository;
 import com.BankingApplication.Service.AccountManagementService;
@@ -23,25 +24,40 @@ public class AccountManagement {
     @PostMapping("/add_account")
     public ResponseEntity<AccountDto> createAccount(@RequestBody AccountDto ac)
     {
-       return ams.saveAccount(ac);
+        if (ac == null || ac.getAccount_number() == null) {
+            throw new CustomExceptions.BadRequestException("Invalid account data");
+        }
+        return ams.saveAccount(ac);
     }
 
     @GetMapping("/get_account_details")
     public ResponseEntity<List<Account>> getAccountDetails()
     {
 
+
+
+
         return ams.getAccountDetails();
     }
     @GetMapping("/get_account_details_by_Id/{id}")
-    public ResponseEntity<Account> getAccountDetailsById(@PathVariable int id)
-    {
-        return ams.getAccountDetailsById(id);
+    public ResponseEntity<Account> getAccountDetailsById(@PathVariable int id) {
+        ResponseEntity<Account> response = ams.getAccountDetailsById(id);
+        Account account = response.getBody();
+        if (account == null) {
+            throw new CustomExceptions.ResourceNotFoundException("Account not found with id: " + id);
+        }
+        return ResponseEntity.ok(account);
     }
 
     @DeleteMapping("/delete_by_Id/{id}")
     public ResponseEntity<Account> deleteById(@PathVariable int id)
     {
-        return ams.deleteById(id);
+        ResponseEntity<Account> response = ams.deleteById(id);
+        Account deletedAccount = response.getBody();
+        if (deletedAccount == null) {
+            throw new CustomExceptions.ResourceNotFoundException("Account not found with id: " + id);
+        }
+        return ResponseEntity.ok(deletedAccount);
     }
 
 

@@ -19,7 +19,7 @@ public class UserDto {
 
     private String password;
 
-   private UserTypes role =UserTypes.CUSTOMER;
+   private UserTypes role =UserTypes.customer;
 
     private LocalDateTime createdAt;
 

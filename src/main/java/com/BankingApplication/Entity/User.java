@@ -33,7 +33,7 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "ENUM('customer', 'bank_teller','admin') DEFAULT 'customer'")
-    private UserTypes role =UserTypes.CUSTOMER;
+    private UserTypes role =UserTypes.customer;
 
     @Column(name = "created_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", updatable = false)
     private LocalDateTime createdAt;
@@ -50,7 +50,4 @@ public class User {
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
-
-
-
 }
