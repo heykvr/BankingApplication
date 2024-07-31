@@ -2,6 +2,7 @@ package com.BankingApplication.Service;
 
 import com.BankingApplication.Dto.UserDto;
 import com.BankingApplication.Entity.User;
+import com.BankingApplication.Exception.CustomExceptions;
 import com.BankingApplication.Mapper.UserMapper;
 import com.BankingApplication.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,14 +32,19 @@ public class UserManagementService {
         }
         catch (Exception e)
         {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            throw new CustomExceptions.BadRequestException("Invalid Data Passed");
         }
     }
 
     public ResponseEntity<User> getUserById(int id) {
-        Optional<User> lst=UsRepo.findById(id);
-        return lst.map(user -> new ResponseEntity<>(user, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.BAD_REQUEST));
-
+        try {
+            Optional<User> lst = UsRepo.findById(id);
+            return lst.map(user -> new ResponseEntity<>(user, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.BAD_REQUEST));
+        }
+        catch (Exception e)
+        {
+            throw new CustomExceptions.ResourceNotFoundException("the user with id"+id+"not found");
+        }
     }
 
     public ResponseEntity<User> updateByUserId(int id,User us) {
@@ -49,6 +55,6 @@ public class UserManagementService {
             u.setEmail(us.getEmail());
             return new ResponseEntity<>(u,HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        throw new CustomExceptions.ResourceNotFoundException("The Data you want to delete is not available");
     }
 }
